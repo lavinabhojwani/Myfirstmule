@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f11d2142-32ee-4c54-9290-7999ec87fa48" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="first_mule_appFlow2" doc:id="69d83596-d0db-4896-b9ef-e624f71a207c" >
+		<http:listener doc:name="Listener" doc:id="e9927b06-1d90-4b7e-b02e-a57875afd792" config-ref="HTTP_Listener_config" path="/test123" allowedMethods="   "/>
+		<ee:transform doc:name="Transform Message" doc:id="1243ddc1-ab17-46f2-af49-281ec22beb58" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+output application/json
+---
+"hi, my name is " ++ payload.name ++ " id is " ++ payload.id ++ " and " ++ payload.company]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="first_mule_appFlow" doc:id="d8f76a41-1f1f-4723-8f50-00d5b5092e21" >
+		<http:listener doc:name="Listener" doc:id="bd9617ad-bdcd-4404-bafd-5423f74ba70a" config-ref="HTTP_Listener_config" path="/test" allowedMethods="GET"/>
+		<set-variable value='#["Hello World"]' doc:name="Set Variable" doc:id="c3b4a993-763c-47ad-abab-c213d86d9e23" variableName="Name"/>
+		<file:read doc:name="Read" doc:id="f11d3cf8-db6a-4df1-a2a2-3a0c8320083c" path="C:\Users\mohit\Desktop\New Text Document.txt"/>
+		<set-payload value='#[vars.Name]' doc:name="Set Payload" doc:id="f003d4bd-491b-4e2e-b41d-3c4dc9c01493" />
+	</flow>
+	<flow name="first_mule_appFlow1" doc:id="05dc3079-7f7f-42f2-ac8c-e6aa6e1965c6" >
+		<http:listener doc:name="Listener" doc:id="5fa72580-1f37-4d11-b5ed-246d49f17109" config-ref="HTTP_Listener_config" path="/sports"/>
+		<set-payload value='#["Hello Lavina"]' doc:name="Set Payload" doc:id="af01d8fb-1c67-4656-9441-e2c4a7bd8dd0" />
+	</flow>
+</mule>
